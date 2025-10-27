@@ -11,7 +11,7 @@ def your_netid():
     return YOUR_NET_ID
 
 def your_hf_token():
-    YOUR_HF_TOKEN = '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'
+    YOUR_HF_TOKEN = ''
     return YOUR_HF_TOKEN
 
 
@@ -22,11 +22,11 @@ def your_prompt():
         A string.
     Example: a=1111, b=2222, prefix='Input: ', suffix='\nOutput: '
     """
-    prefix = '''You're a calculator.
+    prefix = '''
 Answer the question with final result only followed by a new line.
 Output the sum with digits only, no spaces, commas, or text.
-Give no explanation of the answer.
-Follow these rules strictly: Add digits from right to left. If a digit-sum is 10 or more, add 1 to the next digit.
+Don't give explanation of the answer.
+Rules: If a digit-sum is 10 or more, add 1 to the next digit.
 Question: what is 5365917+4824171
 Explanation: Right to left: 7+1=8, 1+7=8, 9+1=10 write 0 carry 1, 5+4+1=10 write 0 carry 1, 6+2+1=9 write 9, 3+8=11 write, 5+4+1=10 write 0 carry 1
 Answer: 10190088
@@ -44,7 +44,8 @@ Question: what is 6041295+3786427?
 Answer: 9827722
 Question: what is 1035947+8962178?
 Answer: 9998125
-Question: what is '''
+Question: what is
+'''
 
     suffix = '?\nAnswer: '
 
@@ -89,10 +90,10 @@ def your_post_processing(output_string):
     nums = []
     for ans in all_ans:
         valid_ans = re.sub(r"\D", "", ans)
-        if 7 <= len(valid_ans) <= 8:
+        if len(valid_ans) >= 7 and len(valid_ans) <= 8:
             try:
                 value = int(valid_ans)
-                if 1_000_000 <= value <= 19_999_999:
+                if 1000000 <= value <= 19999999:
                     nums.append(value)
             except:
                 continue
