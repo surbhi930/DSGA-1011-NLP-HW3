@@ -25,6 +25,7 @@ def your_prompt():
     prefix = '''
 Output only the sum as digits with no explanation.
 Answer the question with only the final result followed by newline.
+Don't give explanation of the answer.
 Rule: If a digit-sum is 10 or more, add 1 to the next digit.
 Question: 5365917+6824171
 Answer: 12190088
@@ -75,8 +76,8 @@ def your_config():
     config = {
         'max_tokens': 90, # max_tokens must be >= 50 because we don't always have prior on output length 
         'temperature': 0.09,
-        'top_k': 20,
-        'top_p': 0.5,
+        'top_k': 0,
+        'top_p': 1,
         'repetition_penalty': 1.09,
         'stop': ["Example", "\n\n"]}
     
