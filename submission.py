@@ -74,11 +74,11 @@ def your_config():
     """
     config = {
         'max_tokens': 90, # max_tokens must be >= 50 because we don't always have prior on output length 
-        'temperature': 0.01,
+        'temperature': 0.09,
         'top_k': 20,
         'top_p': 0.5,
-        'repetition_penalty': 1,
-        'stop': ["Example", "Explanation", "\n\n\n"]}
+        'repetition_penalty': 1.09,
+        'stop': ["Example", "\n\n"]}
     
     return config
 
@@ -99,15 +99,20 @@ def your_post_processing(output_string):
     s = output_string.strip()
     all_ans = re.findall(r'\b[0-9,]+\b', s)
     nums = []
+    longest_num = None
     for ans in all_ans:
         valid_ans = re.sub(r"\D", "", ans)
-        if len(valid_ans) >= 7 and len(valid_ans) <= 8:
+        if longest_num is None or len(valid_ans) > len(longest_num):
+            longest_num = valid_ans
+        if len(valid_ans) >= 7 and len(valid_ans) <= 9:
             try:
                 value = int(valid_ans)
-                if 1000000 <= value <= 19999999:
+                if 1000000 <= value <= 999999999:
                     nums.append(value)
             except:
                 continue
     if nums:
         return nums[-1]
+    if longest_num and 6 <= len(longest_num) <= 9:
+        return int(longest_num)
     return 0
