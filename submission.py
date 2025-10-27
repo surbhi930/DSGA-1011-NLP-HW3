@@ -84,18 +84,18 @@ def your_post_processing(output_string):
         the autograder will check whether the post processing function contains arithmetic additiona and the graders might also manually check.
     """
 
-    s = output_string.strip().rsplit("Answer:", 1)
-    all_ans = re.findall(r'\d+', s)
-    if all_ans:
-        nums = []
-        for ans in all_ans:
-            if 7 <= len(ans) <= 8:
-                try:
-                    v = int(ans)
-                    if 1_000_000 <= v <= 19_999_999:
-                        nums.append(v)
-                except:
-                    continue
-        if nums:
-            return nums[-1]
-        return 0
+    s = output_string.strip()
+    all_ans = re.findall(r'\b[0-9,]+\b', s)
+    nums = []
+    for ans in all_ans:
+        valid_ans = re.sub(r"\D", "", ans)
+        if 7 <= len(valid_ans) <= 8:
+            try:
+                value = int(valid_ans)
+                if 1_000_000 <= value <= 19_999_999:
+                    nums.append(value)
+            except:
+                continue
+    if nums:
+        return nums[-1]
+    return 0
