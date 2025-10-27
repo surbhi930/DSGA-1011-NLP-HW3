@@ -7,11 +7,11 @@ import requests
 import re
 
 def your_netid():
-    YOUR_NET_ID = 'YOUR_NET_ID'
+    YOUR_NET_ID = 'xs2682'
     return YOUR_NET_ID
 
 def your_hf_token():
-    YOUR_HF_TOKEN = 'YOUR_HF_TOKEN'
+    YOUR_HF_TOKEN = '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'
     return YOUR_HF_TOKEN
 
 
@@ -22,7 +22,29 @@ def your_prompt():
         A string.
     Example: a=1111, b=2222, prefix='Input: ', suffix='\nOutput: '
     """
-    prefix = '''Question: what is 1234567+1234567?\nAnswer: 2469134\nQuestion: what is '''
+    prefix = '''You're a calculator.
+Answer the question with final result only followed by a new line.
+Output the sum with digits only, no spaces, commas, or text.
+Give no explanation of the answer.
+Follow these rules strictly: Add digits from right to left. If a digit-sum is 10 or more, add 1 to the next digit.
+Question: what is 5365917+4824171
+Explanation: Right to left: 7+1=8, 1+7=8, 9+1=10 write 0 carry 1, 5+4+1=10 write 0 carry 1, 6+2+1=9 write 9, 3+8=11 write, 5+4+1=10 write 0 carry 1
+Answer: 10190088
+Question: what is 1234567+1234567?
+Answer: 2469134
+Question: what is 8716638+1302271?
+Answer: 10018909
+Question: what is 3697407+4804185?
+Answer: 8501592
+Question: what is 3726518+2184739?
+Answer: 5911257
+Question: what is 9451203+7082416?
+Answer: 16533619
+Question: what is 6041295+3786427?
+Answer: 9827722
+Question: what is 1035947+8962178?
+Answer: 9998125
+Question: what is '''
 
     suffix = '?\nAnswer: '
 
@@ -39,12 +61,12 @@ def your_config():
         Adding additional keys will result in error.
     """
     config = {
-        'max_tokens': 50, # max_tokens must be >= 50 because we don't always have prior on output length 
-        'temperature': 0.7,
-        'top_k': 50,
-        'top_p': 0.7,
+        'max_tokens': 90, # max_tokens must be >= 50 because we don't always have prior on output length 
+        'temperature': 0.01,
+        'top_k': 20,
+        'top_p': 0.5,
         'repetition_penalty': 1,
-        'stop': []}
+        'stop': ["Example", "\n\n\n"]}
     
     return config
 
@@ -52,7 +74,6 @@ def your_config():
 def your_pre_processing(s):
     return s
 
-    
 def your_post_processing(output_string):
     """Returns the post processing function to extract the answer for addition
     Returns:
@@ -62,9 +83,19 @@ def your_post_processing(output_string):
         by extracting the two given numbers and adding them.
         the autograder will check whether the post processing function contains arithmetic additiona and the graders might also manually check.
     """
-    only_digits = re.sub(r"\D", "", output_string)
-    try:
-        res = int(only_digits)
-    except:
-        res = 0
-    return res
+
+    s = output_string.strip().rsplit("Answer:", 1)
+    all_ans = re.findall(r'\d+', s)
+    if all_ans:
+        nums = []
+        for ans in all_ans:
+            if 7 <= len(ans) <= 8:
+                try:
+                    v = int(ans)
+                    if 1_000_000 <= v <= 19_999_999:
+                        nums.append(v)
+                except:
+                    continue
+        if nums:
+            return nums[-1]
+        return 0
