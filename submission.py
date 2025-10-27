@@ -23,31 +23,42 @@ def your_prompt():
     Example: a=1111, b=2222, prefix='Input: ', suffix='\nOutput: '
     """
     prefix = '''
-Answer the question with final result only followed by a new line.
-Output the sum with digits only, no spaces, commas, or text.
-Don't give explanation of the answer.
-Rules: If a digit-sum is 10 or more, add 1 to the next digit.
-Question: what is 5365917+4824171
-Explanation: Right to left: 7+1=8, 1+7=8, 9+1=10 write 0 carry 1, 5+4+1=10 write 0 carry 1, 6+2+1=9 write 9, 3+8=11 write, 5+4+1=10 write 0 carry 1
-Answer: 10190088
-Question: what is 1234567+1234567?
+Output only the sum as digits with no explanation.
+Answer the question with only the final result followed by newline.
+Rule: If a digit-sum is 10 or more, add 1 to the next digit.
+Question: 5365917+6824171
+Answer: 12190088
+Explanation: 7+1=8, 1+7=8, 9+1=10 write 0 carry 1, 5+4+1=10 write 0 carry 1, 6+2+1=9 write 9, 3+8=11 write 1 carry 1, 5+6+1=12 write 2 carry 1
+Question: 1234567+1234567
 Answer: 2469134
-Question: what is 8716638+1302271?
-Answer: 10018909
-Question: what is 3697407+4804185?
-Answer: 8501592
-Question: what is 3726518+2184739?
-Answer: 5911257
-Question: what is 9451203+7082416?
-Answer: 16533619
-Question: what is 6041295+3786427?
-Answer: 9827722
-Question: what is 1035947+8962178?
-Answer: 9998125
-Question: what is
+Question: 7266426+4758649
+Answer: 12025075
+Question: 1849658+9146618
+Answer: 10996276
+Question: 3875741+6338672
+Answer: 10214413
+Question: 9753833+7241623
+Answer: 16995456
+Question: 7767518+5928584
+Answer: 13696102
+Question: 1253531+3835776
+Answer: 5089307
+Question: 1692838+7331945
+Answer: 9024783
+Question: 7261695+7241742
+Answer: 14503437
+Question: 9934556+5998961
+Answer: 15933517
+Question: 3984499+8223118
+Answer: 12207617
+Question: 1728224+5137592
+Answer: 6865816
+Question: 4412487+5946863
+Answer: 10359350
+Question:
 '''
 
-    suffix = '?\nAnswer: '
+    suffix = '\nAnswer: '
 
     return prefix, suffix
 
@@ -67,7 +78,7 @@ def your_config():
         'top_k': 20,
         'top_p': 0.5,
         'repetition_penalty': 1,
-        'stop': ["Example", "\n\n\n"]}
+        'stop': ["Example", "Explanation", "\n\n\n"]}
     
     return config
 
